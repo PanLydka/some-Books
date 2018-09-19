@@ -1,13 +1,32 @@
 import React, { Component } from "react";
+import { BooksList } from "./components/BooksList";
+import { booksFetched } from "./actions";
+import { connect } from "react-redux";
 
-class App extends Component {
+class AppContainer extends Component {
+  componentDidMount() {
+    fetch("http://localhost:3001/books/")
+      .then(res => res.json())
+      .then(res => this.props.booksFetched(res));
+  }
+
   render() {
     return (
       <div className="App">
-        <h1> kamil </h1>
+        <BooksList books={this.props.books} />
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    books: state.books
+  };
+};
+const mapDispatchToProps = { booksFetched };
+
+export const App = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppContainer);
