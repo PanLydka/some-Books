@@ -3,7 +3,10 @@ export const books = (state = [], action) => {
     case "FETCH_BOOKS_SUCCESS":
       return [...action.books];
     case "REMOVED_BOOK_SUCCESS":
-      return state;
+      const newStateBooks = state.filter(
+        book => JSON.stringify(book) !== JSON.stringify(action.book)
+      );
+      return newStateBooks;
     case "ADD_BOOK_SUCCESS":
       return [...state, action.book];
     default:
