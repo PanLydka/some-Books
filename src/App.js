@@ -1,19 +1,52 @@
 import React, { Component } from "react";
 import { BooksList } from "./components/BooksList";
-import { booksFetched } from "./actions";
+import NewBookForm from "./components/NewBookForm";
+import { booksFetched, bookRemoved, bookAdd } from "./actions";
 import { connect } from "react-redux";
+import axios from "axios";
 
 class AppContainer extends Component {
-  componentDidMount() {
-    fetch("http://localhost:3001/books/")
-      .then(res => res.json())
-      .then(res => this.props.booksFetched(res));
+  constructor(props) {
+    super(props);
+    this.state = {
+      repsonse: null
+    };
   }
+
+  componentDidMount() {
+    axios
+      .get("http://localhost:3001/books")
+      .then(res => res.data)
+      .then(data => this.props.booksFetched(data))
+      .catch(error => console.log(error.message));
+  }
+
+  removeBook = e => {
+    const id = e.target.id;
+
+    axios.get("http://localhost:3001/books/" + id).then(response => {
+      this.setState({ response: response.data });
+    });
+
+    axios
+      .delete("http://localhost:3001/books/" + id)
+      .then(res => this.props.bookRemoved(this.state.response))
+      .catch(error => console.log(error.message));
+  };
+
+  handleAddBook = data => {
+    axios
+      .post("http://localhost:3001/books", data)
+      .then(res => res.data)
+      .then(data => this.props.bookAdd(data))
+      .catch(error => console.log(error));
+  };
 
   render() {
     return (
-      <div className="App">
-        <BooksList books={this.props.books} />
+      <div>
+        <BooksList books={this.props.books} removeBook={this.removeBook} />
+        <NewBookForm onSubmit={this.handleAddBook} />
       </div>
     );
   }
@@ -24,9 +57,15 @@ const mapStateToProps = state => {
     books: state.books
   };
 };
-const mapDispatchToProps = { booksFetched };
+const mapDispatchToProps = {
+  booksFetched,
+  bookRemoved,
+  bookAdd
+};
 
-export const App = connect(
+const decorate = connect(
   mapStateToProps,
   mapDispatchToProps
-)(AppContainer);
+);
+
+export default decorate(AppContainer);
