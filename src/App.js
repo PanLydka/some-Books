@@ -45,6 +45,7 @@ class AppContainer extends Component {
   render() {
     return (
       <div>
+        <h1> Twoja lista książek.</h1>
         <BooksList books={this.props.books} removeBook={this.removeBook} />
         <NewBookForm onSubmit={this.handleAddBook} />
       </div>
