@@ -5,7 +5,7 @@ import { booksFetched, bookRemoved, bookAdd } from "./actions";
 import { connect } from "react-redux";
 import axios from "axios";
 
-class AppContainer extends Component {
+export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -69,4 +69,4 @@ const decorate = connect(
   mapDispatchToProps
 );
 
-export default decorate(AppContainer);
+export default decorate(App);
