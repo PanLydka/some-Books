@@ -16,7 +16,7 @@ yarn install
 json-server --watch db.json --port 3001
 ```
 
-Wait for your local server to start. (About 30 seconds)
+Wait for your local server to start (about 30 seconds)
 and in second terminal
 
 ```
